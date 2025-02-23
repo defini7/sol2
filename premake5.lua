@@ -9,7 +9,7 @@ project "sol2"
     targetdir ("%{wks.location}/Build/Target/" .. OUTPUT_DIR .. "/%{prj.name}")
     objdir ("%{wks.location}/Build/Obj/" .. OUTPUT_DIR .. "/%{prj.name}")
 
-    files { "include/sol/**" }
+    files { "include/sol/**", "sources/dummy.cpp" }
 
     filter "system:linux"
         pic "On"
