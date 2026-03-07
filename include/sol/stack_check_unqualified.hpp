@@ -218,6 +218,7 @@ namespace sol { namespace stack {
 			}
 			else if constexpr (is_unique_usertype_v<T>) {
 				using element = unique_usertype_element_t<T>;
+				using element_no_cv = meta::unqualified_t<element>;
 				using actual = unique_usertype_actual_t<T>;
 				const type indextype = type_of(L_, index);
 				tracking.use(1);
@@ -229,7 +230,7 @@ namespace sol { namespace stack {
 					return true;
 				}
 				int metatableindex = lua_gettop(L_);
-				if (stack_detail::check_metatable<d::u<element>>(L_, metatableindex)) {
+				if (stack_detail::check_metatable<d::u<element_no_cv>>(L_, metatableindex)) {
 					void* memory = lua_touserdata(L_, index);
 					memory = detail::align_usertype_unique_destructor(memory);
 					detail::unique_destructor& pdx = *static_cast<detail::unique_destructor*>(memory);
@@ -582,7 +583,7 @@ namespace sol { namespace stack {
 	template <typename T, std::size_t N, type expect>
 	struct unqualified_checker<exhaustive_until<T, N>, expect> {
 		template <typename K, typename V, typename Handler>
-		static bool check_two(types<K, V>, lua_State* arg_L, int relindex, type indextype, Handler&& handler, record& tracking) {
+		static bool check_two(types<K, V>, lua_State* arg_L, int relindex, type, Handler&& handler, record& tracking) {
 			tracking.use(1);
 
 #if SOL_IS_ON(SOL_SAFE_STACK_CHECK)

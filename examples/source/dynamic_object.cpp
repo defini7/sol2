@@ -10,7 +10,9 @@
 struct dynamic_object {
 	std::unordered_map<std::string, sol::object> entries;
 
-	void dynamic_set(std::string key, sol::stack_object value) {
+	// Uses main_object since we may get objects from coroutine
+	// threads that might die before us.
+	void dynamic_set(std::string key, sol::main_object value) {
 		auto it = entries.find(key);
 		if (it == entries.cend()) {
 			entries.insert(
